@@ -1,0 +1,269 @@
+// Central data store for the HR application
+
+const RAW_EMPLOYEES = [
+  {
+    id: 1,
+    name: 'Ahmet Yılmaz',
+    title: 'Senior Frontend Developer',
+    department: 'Yazılım',
+    email: 'ahmet.y@hrcore.com',
+    phone: '+90 532 000 00 01',
+    startDate: '12.03.2021',
+    status: 'Aktif',
+    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBXzHXr0Hk3NdUZ9RUC8JkAh5VY7A16V7puXG2gdw2rb1R7HVxKMhMkLedTpNH6uxH2mB19L9eIb3sn9OFR1JYyIWIDTKzQDDdYiawVlGyolddM6dYXErc3HC8g4tV49QmukzbmZcg0EmKZ9uEOuC2mHcVjIO-I4Nz2Bm2ABTW3aGkS0A_nENx0aAUcr4dJX_NITlXemdwtdF4k9FIpUfll7S8XedqyxvrilTL7YtmHMalG52F7-ATTnX32wlBWVN0SEB0nfgvZHiEz',
+    remainingLeave: 12,
+    totalLeave: 20,
+    daysWorked: 1851,
+    location: 'İstanbul',
+    recentActivity: [
+      { desc: 'Proje toplantısına katıldı', date: 'Bugün, 09:00' },
+      { desc: 'Sprint review tamamlandı', date: '3 Nis 2026' },
+    ],
+  },
+  {
+    id: 2,
+    name: 'Zeynep Kaya',
+    title: 'Marketing Specialist',
+    department: 'Pazarlama',
+    email: 'zeynep.k@hrcore.com',
+    phone: '+90 533 000 00 02',
+    startDate: '05.06.2022',
+    status: 'İzinli',
+    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB18If9ov0_zf5HCPxZqEmXnI8gBXZf6ETMEY7rZa_75xI71SKtW5vBQMCyNsEOm7zb5TIHPruAHFfHH7wm2_LrVI9nHeMAnNb1sosxj6toPCkkD82YnQIiQ8Eo07sqprRbRcS2N5slV51wi6tChmemEVKmGFmZ4nq6Cbs9RLYWla7gb--Tx8hPkC8_IBDtWU1BbQcBwR6Q1NWOtvomNljB4WUAlUZuV6xH14lBEUp9CsIfO7dKWtZ74fFUrxK5XnhdhxXxXWnjRg-1',
+    remainingLeave: 7,
+    totalLeave: 20,
+    daysWorked: 1035,
+    location: 'Ankara',
+    recentActivity: [
+      { desc: 'Yıllık izin talebi oluşturuldu', date: 'Dün, 14:20' },
+      { desc: 'Kampanya raporu gönderildi', date: '1 Nis 2026' },
+    ],
+  },
+  {
+    id: 3,
+    name: 'Mert Aksoy',
+    title: 'HR Director',
+    department: 'İK',
+    email: 'mert.a@hrcore.com',
+    phone: '+90 535 000 00 03',
+    startDate: '10.01.2020',
+    status: 'Aktif',
+    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDUKVQrJfJxWvng6nU2XuCyuCW33KJR2waKQiYOn5bnsM9NzLjNWTzBP9F7D77f9UuvTqnghN4GrYJmBmDP_e5M6dAMd5ogRsHpeoNGtWr4gqSYbQARrFgwoFss88JsHCHm6vs5fiTbjZfFAtohNAHBRKr8dncP19mAL3ru0a9v6vcXWa8kKZeY98BSeupQqn_T1JcmBwIOxgvSdwomucTirc6glpj2430Ika9bmy3eXvZKs2TbRkDx-qI_cLGey-rIN14yRAf_3B7M',
+    remainingLeave: 18,
+    totalLeave: 25,
+    daysWorked: 2282,
+    location: 'İstanbul',
+    recentActivity: [
+      { desc: 'Performans değerlendirmesi yapıldı', date: 'Bugün, 11:30' },
+      { desc: 'Bordro onaylandı', date: '31 Mar 2026' },
+    ],
+  },
+  {
+    id: 4,
+    name: 'Deniz Şahin',
+    title: 'UX Designer',
+    department: 'Yazılım',
+    email: 'deniz.s@hrcore.com',
+    phone: '+90 539 000 00 04',
+    startDate: '15.09.2023',
+    status: 'Aktif',
+    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAnMjv0Vl8Nr_ZM5sLK2fWSYMp1cuVYEakr0B6fJvPda0SHohhHcGVH15MZxSPEap_XhQwxjnqJ4RJfKbqb8pGT8ScIcwIrfJnoiyNf_Lte7_qdidZvKc4ytO-GKO3EHknNov9MSFIH4DhwbtBcCo2EppHcfRZtGdIdaeg4PWD6DHEwlCyjqfBLsEtZuBmJmGmCA4LXzTlWLd_QpjO7y5heq8PLc22Z3z6yjeXn16-vAppuAgAg3f4EvDnrttk1CRl2S8oXZy8kNYAt',
+    remainingLeave: 16,
+    totalLeave: 20,
+    daysWorked: 568,
+    location: 'Uzaktan',
+    recentActivity: [
+      { desc: 'Yeni prototip tasarımı yüklendi', date: 'Bugün, 10:00' },
+      { desc: 'Design system güncellendi', date: '2 Nis 2026' },
+    ],
+  },
+  {
+    id: 5,
+    name: 'Can Berk Tokay',
+    title: 'Yazılım Ekip Lideri',
+    department: 'Yazılım',
+    email: 'can.b@hrcore.com',
+    phone: '+90 532 111 22 33',
+    startDate: '01.03.2023',
+    status: 'Aktif',
+    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA8fr6P_UrYTC8LZiImoiI3Glg7P4pr70jfJ7tH0e_7YQ9rHJWSmWXImzy1xcKrqyHs45Qu_f-hi2dimo6dZq-X0bXGEhZs8aKhHqQD75G0_Ca5Ydr58z7_J8TJZXFrWDaboIwfm_LthU7UIkOrUXcAiy8gj6OGyKvgvn9qGzEVClrkdDcM5I8QPsoaj9D6azB1M6_nFmjXW1rxixXMYx1LJAihOFVdqasnkrY5wAnwfqvV6MtduiMYOW7eesvNEmjv77tRQ7MjzuT2',
+    remainingLeave: 14,
+    totalLeave: 20,
+    daysWorked: 425,
+    location: 'İstanbul',
+    recentActivity: [
+      { desc: 'Yıllık izin talebi oluşturuldu', date: 'Dün, 14:20' },
+      { desc: 'Maaş bordrosu görüntülendi', date: '12 May 2024' },
+    ],
+  },
+  {
+    id: 6,
+    name: 'Elif Soylu',
+    title: 'UI/UX Tasarımcı',
+    department: 'Yazılım',
+    email: 'elif.s@hrcore.com',
+    phone: '+90 535 222 33 44',
+    startDate: '18.07.2022',
+    status: 'Aktif',
+    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCfUR4JVyjyzfB5Uc-N7hZUwZCrbTvazXeTmERYApceVMlhWPFi_TwETDc6RTtiG_B4XwteqvNXqPKrmwywTGoKgAdoIlDELxGyr8hle8S-hOooPXaNKbTWXDeexPanW1__r607-YQ1NNHvs_vdTGagL730tUbb-_QqRfl26NIvY7oiM2gd38tD_lYqBnjtECSENC0Uz7-83rh86SOAm9GIR1CawFKcI6YEpuYKyYK7GuAZLh_YZ_tQFVXVy3xbkD6o2lZsuoMNXf4o',
+    remainingLeave: 9,
+    totalLeave: 20,
+    daysWorked: 991,
+    location: 'İzmir',
+    recentActivity: [
+      { desc: 'Mazeret izni talebi oluşturuldu', date: 'Bugün, 09:15' },
+      { desc: 'Figma dosyası güncellendi', date: '30 Mar 2026' },
+    ],
+  },
+  {
+    id: 7,
+    name: 'Mehmet Akın',
+    title: 'Backend Geliştirici',
+    department: 'Yazılım',
+    email: 'mehmet.a@hrcore.com',
+    phone: '+90 541 333 44 55',
+    startDate: '22.11.2021',
+    status: 'Aktif',
+    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCeco8A5dQOqxJXb-E6bAq1nXloPyCJYmoGio3jhVp0fV7fL4cdiIVFMv9Ldp4KWkZjg1S44Ne8bnvSPG201xcbfU5G0UhCUwgwKF5Y3gAQ-h85NrjekGxhWCHOTqrxUTdxrKEME1A6e1SHsa2elL7z2ur8E2Ph1qmfQe8yq4MfE_WhsO9pNG1iIwRLz3pF8vJ8ewsi99zfuFVRSmqghNeBvMjC2Stxw0nDsE9NzEpbKrvv6IgTgJcwhs5oBMbBNCRdh4TEcgj0Da3z',
+    remainingLeave: 5,
+    totalLeave: 20,
+    daysWorked: 1596,
+    location: 'İstanbul',
+    recentActivity: [
+      { desc: 'Yıllık izin talebi oluşturuldu', date: 'Bugün, 08:45' },
+      { desc: 'API dokümantasyonu güncellendi', date: '1 Nis 2026' },
+    ],
+  },
+  {
+    id: 8,
+    name: 'Selin Arslan',
+    title: 'Data Analyst',
+    department: 'Finans',
+    email: 'selin.a@hrcore.com',
+    phone: '+90 545 444 55 66',
+    startDate: '03.04.2023',
+    status: 'Aktif',
+    avatar: null,
+    remainingLeave: 19,
+    totalLeave: 20,
+    daysWorked: 368,
+    location: 'Ankara',
+    recentActivity: [
+      { desc: 'Aylık rapor hazırlandı', date: 'Bugün, 11:00' },
+      { desc: 'Dashboard metriklerine bakıldı', date: '4 Nis 2026' },
+    ],
+  },
+];
+
+export const EMPLOYEES = RAW_EMPLOYEES.map((emp) => {
+  const isHighPerformer = emp.id % 2 !== 0; // Dinamik test datası için (Tek ID'ler iyi, Çiftler düşük)
+  const baseScore = isHighPerformer ? 80 : 50;
+  
+  const baseGross = 40000 + (emp.id * 5000);
+  const netSalary = baseGross * 0.75;
+  const overtimeCost = isHighPerformer ? 3500 : 0;
+
+  return {
+    ...emp,
+    payrollData: {
+      gross: baseGross,
+      net: netSalary,
+      overtime: overtimeCost,
+      status: emp.id % 3 === 0 ? 'Bekliyor' : 'Ödendi',
+      month: 'Nisan 2026'
+    },
+    documents: [
+      { id: `doc_${emp.id}_1`, name: `${emp.name.replace(' ','_')}_Sozlesme.pdf`, category: 'Sözleşmeler', size: '1.2 MB', date: '01.01.2023' },
+      { id: `doc_${emp.id}_2`, name: `ISG_Egitimi_${emp.name.split(' ')[0]}.pdf`, category: 'İSG Belgeleri', size: '4.5 MB', date: '15.02.2024' },
+      { id: `doc_${emp.id}_3`, name: `Kimlik_Fotokopisi.jpg`, category: 'Özlük Dosyaları', size: '800 KB', date: emp.startDate }
+    ],
+    performanceData: {
+      averageScore: isHighPerformer ? 88 : 63,
+      radarData: [
+        { subject: 'Teknik', score: baseScore + 10, fullMark: 100 },
+        { subject: 'İletişim', score: baseScore + 5, fullMark: 100 },
+        { subject: 'Takım Çalışması', score: baseScore + 15, fullMark: 100 },
+        { subject: 'Problem Çözme', score: baseScore + 8, fullMark: 100 },
+        { subject: 'Zaman Yönetimi', score: baseScore, fullMark: 100 },
+      ],
+      trendData: [
+        { month: 'Kas', score: baseScore - 5 },
+        { month: 'Ara', score: baseScore },
+        { month: 'Oca', score: baseScore - 2 },
+        { month: 'Şub', score: baseScore + 5 },
+        { month: 'Mar', score: baseScore + 8 },
+        { month: 'Nis', score: baseScore + 11 },
+      ],
+      kpis: [
+        { name: 'Projeleri Zamanında Teslim', target: 100, current: isHighPerformer ? 95 : 60, type: '%' },
+        { name: 'Hata Oranı (<%2)', target: 100, current: isHighPerformer ? 90 : 45, type: '%' },
+        { name: 'Takım İçi Memnuniyet', target: 5, current: isHighPerformer ? 4.8 : 3.2, type: 'Puan', max: 5 },
+      ],
+      feedbacks: [
+        { author: 'Can Berk Tokay', role: 'Yönetici', text: isHighPerformer ? 'Harika bir çeyrekti, analitik zekan projeleri hızlandırdı.' : 'Zaman yönetimi konusunda destek alman ve görev takibini güçlendirmen gerekiyor.' },
+        { author: 'Elif Soylu', role: 'Çalışma Arkadaşı', text: isHighPerformer ? 'Takım oyuncusu, her zaman teknik yardıma hazır.' : 'İletişimde kopukluklar yaşıyoruz, daha aktif olabilirsin.' }
+      ],
+    }
+  };
+});
+
+export const LEAVE_REQUESTS = [
+  {
+    id: 'lr1',
+    employeeId: 5,
+    name: 'Ahmet Demir',
+    title: 'Frontend Geliştirici',
+    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBXzHXr0Hk3NdUZ9RUC8JkAh5VY7A16V7puXG2gdw2rb1R7HVxKMhMkLedTpNH6uxH2mB19L9eIb3sn9OFR1JYyIWIDTKzQDDdYiawVlGyolddM6dYXErc3HC8g4tV49QmukzbmZcg0EmKZ9uEOuC2mHcVjIO-I4Nz2Bm2ABTW3aGkS0A_nENx0aAUcr4dJX_NITlXemdwtdF4k9FIpUfll7S8XedqyxvrilTL7YtmHMalG52F7-ATTnX32wlBWVN0SEB0nfgvZHiEz',
+    type: 'Yıllık İzin',
+    typeColor: 'blue',
+    duration: '3 Gün',
+    date: '7-9 Nisan 2026',
+    startDate: '2026-04-07',
+    endDate: '2026-04-09',
+  },
+  {
+    id: 'lr2',
+    employeeId: 6,
+    name: 'Elif Soylu',
+    title: 'UI/UX Tasarımcı',
+    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCfUR4JVyjyzfB5Uc-N7hZUwZCrbTvazXeTmERYApceVMlhWPFi_TwETDc6RTtiG_B4XwteqvNXqPKrmwywTGoKgAdoIlDELxGyr8hle8S-hOooPXaNKbTWXDeexPanW1__r607-YQ1NNHvs_vdTGagL730tUbb-_QqRfl26NIvY7oiM2gd38tD_lYqBnjtECSENC0Uz7-83rh86SOAm9GIR1CawFKcI6YEpuYKyYK7GuAZLh_YZ_tQFVXVy3xbkD6o2lZsuoMNXf4o',
+    type: 'Mazeret İzni',
+    typeColor: 'purple',
+    duration: '1 Gün',
+    date: '6 Nisan 2026',
+    startDate: '2026-04-06',
+    endDate: '2026-04-06',
+  },
+  {
+    id: 'lr3',
+    employeeId: 7,
+    name: 'Mehmet Akın',
+    title: 'Backend Geliştirici',
+    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCeco8A5dQOqxJXb-E6bAq1nXloPyCJYmoGio3jhVp0fV7fL4cdiIVFMv9Ldp4KWkZjg1S44Ne8bnvSPG201xcbfU5G0UhCUwgwKF5Y3gAQ-h85NrjekGxhWCHOTqrxUTdxrKEME1A6e1SHsa2elL7z2ur8E2Ph1qmfQe8yq4MfE_WhsO9pNG1iIwRLz3pF8vJ8ewsi99zfuFVRSmqghNeBvMjC2Stxw0nDsE9NzEpbKrvv6IgTgJcwhs5oBMbBNCRdh4TEcgj0Da3z',
+    type: 'Yıllık İzin',
+    typeColor: 'blue',
+    duration: '5 Gün',
+    date: '14-18 Nisan 2026',
+    startDate: '2026-04-14',
+    endDate: '2026-04-18',
+  },
+  {
+    id: 'lr4',
+    employeeId: 2,
+    name: 'Zeynep Kaya',
+    title: 'Marketing Specialist',
+    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuB18If9ov0_zf5HCPxZqEmXnI8gBXZf6ETMEY7rZa_75xI71SKtW5vBQMCyNsEOm7zb5TIHPruAHFfHH7wm2_LrVI9nHeMAnNb1sosxj6toPCkkD82YnQIiQ8Eo07sqprRbRcS2N5slV51wi6tChmemEVKmGFmZ4nq6Cbs9RLYWla7gb--Tx8hPkC8_IBDtWU1BbQcBwR6Q1NWOtvomNljB4WUAlUZuV6xH14lBEUp9CsIfO7dKWtZ74fFUrxK5XnhdhxXxXWnjRg-1',
+    type: 'Hastalık İzni',
+    typeColor: 'red',
+    duration: '2 Gün',
+    date: '8-9 Nisan 2026',
+    startDate: '2026-04-08',
+    endDate: '2026-04-09',
+  },
+];
+
+export const STATS = {
+  totalEmployees: 128,
+  onLeaveToday: 5,
+  pendingRequests: 12,
+};

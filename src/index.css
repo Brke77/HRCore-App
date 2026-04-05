@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', 'Public Sans', sans-serif;
+    @apply bg-slate-50 text-slate-900 antialiased;
+    @apply dark:bg-slate-900 dark:text-slate-100;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm;
+    @apply dark:bg-slate-800/70 dark:border-slate-700/60;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-sm font-medium cursor-pointer;
+  }
+
+  .nav-item-inactive {
+    @apply text-slate-500 hover:bg-slate-100 hover:text-slate-800;
+    @apply dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200;
+  }
+
+  .nav-item-active {
+    @apply bg-orange-50 text-orange-600 font-semibold;
+    @apply dark:bg-primary/15 dark:text-primary-300;
+  }
+
+  .badge-active {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700;
+    @apply dark:bg-emerald-900/40 dark:text-emerald-400;
+  }
+
+  .badge-leave {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700;
+    @apply dark:bg-amber-900/40 dark:text-amber-400;
+  }
+
+  .badge-left {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700;
+    @apply dark:bg-red-900/40 dark:text-red-400;
+  }
+
+  /* Dark mode card utility */
+  .card {
+    @apply bg-white border border-slate-200 shadow-sm;
+    @apply dark:bg-slate-800 dark:border-slate-700;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #e2e8f0;
+    border-radius: 999px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: #cbd5e1;
+  }
+
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: #334155;
+  }
+  .dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: #475569;
+  }
+
+  .donut-segment {
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
