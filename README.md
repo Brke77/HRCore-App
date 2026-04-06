@@ -1,95 +1,85 @@
-<div align="center">
-  <img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/layers.svg" width="80" alt="HRCore Logo"/>
-  <h1>HRCore: Modern İK ve Karar Destek Sistemi</h1>
-  <p>🚀 İnsan Kaynakları süreçlerini verilerle yönetin, dijitalleştirin ve geleceğe taşıyın.</p>
+# 🚀 HRCore: Next-Gen Enterprise & IE Dashboard
 
-  [![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
-  [![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
-  [![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-  [![Framer Motion](https://img.shields.io/badge/Framer_Motion-black?style=for-the-badge&logo=framer&logoColor=blue)](https://www.framer.com/motion/)
-</div>
+HRCore is not just a standard Human Resources management panel; it is a comprehensive **Corporate Operating System** engineered with core **Industrial Engineering (IE)** principles. Designed to bridge the gap between traditional HR management and operational excellence, it integrates real-time safety metrics, productivity analytics, and lean management tools into a seamless, high-performance digital environment.
+
+By focusing on Efficiency, Occupational Health and Safety (OHS), and Data-driven decision making, HRCore transforms organizational management into a precise, engineering-driven process.
 
 ---
 
-## 🌟 Proje Hakkında
+## ✨ Key Features
 
-**HRCore**, geleneksel ve hantal İnsan Kaynakları süreçlerini geride bırakarak modern ofislerin ihtiyaç duyduğu hızı, esnekliği ve veri analitiğini tek bir noktada toplayan yenilikçi bir web uygulamasıdır. Amacımız sadece verileri dijital ortamda tutmak değil; iş süreçlerini otomatize etmek, akıllı uyarılarla yöneticilerin omuzlarındaki yükü almak ve şirket verimliliğini maksimum düzeye çıkarmaktır. 
-
----
-
-## 🚀 Özellikler (Features)
-
-### 📊 Dashboard
-Şirketin genel durumunu anlık olarak yansıtan kontrol merkezi. Çalışan sayısı, aylık maliyetler, yaklaşan izinler ve güncel duyurular tek bakışta karşınızda.
-
-### 👥 Çalışan Listesi
-Tüm şirket personelinin kapsamlı veritabanı. Çalışanların departman, rol, iletişim bilgileri ve kişisel dosyalarına hızlı erişim ile uçtan uca akıcı bir ekip yönetimi.
-
-### 🗂 İşe Alım (ATS) & Kanban Board
-Adayların işe alım sürecini ("Başvuru", "Mülakat", "Teklif", "İşe Alındı") görselleştiren Sürükle-Bırak (Drag & Drop) destekli akıllı Kanban tahtası. Adaylara ait detaylı profiller ve interaktif not yönetimi içerir.
-
-### 📅 İzin Takvimi (Akıllı Çakışma Kontrolü)
-Tüm personelin izin takibini görselleştiren etkileşimli ajanda. İzin taleplerinin onay süreçlerini otomatize eder ve eşzamanlı izne çıkışlarda yönetimi önceden uyarır.
-
-### 📈 Performans Analizi
-Çalışan performansının Radar ve Çizgi (Line) grafikleriyle çok boyutlu olarak analiz edilmesi. Veriye dayalı yetenek yönetimi, hedeflerin takibi ve terfi planlamasına ışık tutar.
-
-### 💰 Bordro ve Belge Yönetimi
-Şirketin finansal yükünün, bordroların ve operasyonel belgelerin güvenli bir şekilde arşivlenmesi ve takip edilmesi.
-
-### ⚙️ Ayarlar
-Kullanıcı tercihine bağlı arayüz konfigürasyonları, güvenli bildirim yönetimi ve kişiselleştirilmiş profil ayarları.
+- **🔐 Hierarchical Role-Based Access Control (RBAC):** Tailored permissions for HR Managers, Department Managers, and Personnel, ensuring data security and organizational structure.
+- **🛡️ OHS & Operational Safety:** Dynamic risk assessment tracking, real-time PPE (Personal Protective Equipment) compliance monitoring, and an automated "Days Since Last Incident" counter.
+- **📊 IE Analytics & Simulation:** Advanced data visualization for **Lead Time** calculation, **Process Cycle Efficiency**, and **Pareto Analysis** of recruitment bottlenecks.
+- **⚡ Actionable Notifications:** A "Context-Aware" notification system featuring one-click approval workflows and direct performance scoring (the "Well Done" button).
+- **📦 Asset & Training Management:** Full lifecycle tracking for company assets (inventory) and a dynamic training matrix to monitor certificate validity and skill gaps.
+- **📱 Responsive & Interactive Feed:** A modular dashboard with real-time status updates and a "Weekly Mood Survey" to monitor organizational climate.
 
 ---
 
-## 🧬 Endüstri Mühendisliği Perspektifi (Karar Destek Sistemi)
+## 🛠️ Tech Stack
 
-HRCore sıradan bir CRUD (Oluştur-Oku-Güncelle-Sil) arayüzü değil, tam teşekküllü bir **Karar Destek Sistemi (DSS - Decision Support System)** olarak tasarlanmıştır.
+<p align="left">
+  <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
+  <img src="https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white" />
+  <img src="https://img.shields.io/badge/Lucide_React-F7B93E?style=for-the-badge&logo=lucide&logoColor=black" />
+  <img src="https://img.shields.io/badge/Recharts-22b5bf?style=for-the-badge&logo=chartdotjs&logoColor=white" />
+</p>
 
-Özellikle **İzin Takvimi** modülünde yer alan **Capacity Planning (Kapasite Planlama)** ve **Conflict Detection (Çakışma Kontrolü)** mimarisi sayesinde, aynı departmansa sahip iki kritik personelin aynı tarihlerde izne çıkması tespit edilir. Sistem "Olası İş Gücü Açığı" yönünde yöneticilere proaktif uyarılar sunar. Bu sayede:
-- *Operasyonel körlük engellenir.*
-- *İş sürekliliği (Business Continuity) her daim garanti altına alınır.*
-- *Kaynak Optimizasyonu ve hizmet kalitesi maksimize edilir.*
-
----
-
-## 🛠 Teknoloji Yığını (Tech Stack)
-
-Proje, modern web standartlarında mükemmel performans ve esneklik sunması için şu teknolojilerle inşa edilmiştir:
-
-| Teknoloji | Açıklama |
-| :--- | :--- |
-| **React 18+** | Kullanıcı arayüzünün temeli ve sürdürülebilir component mimarisi. |
-| **Vite** | Işık hızında geliştirme (HMR) ve optimize edilmiş modern build aracı. |
-| **Tailwind CSS** | Utility-first yaklaşımı ile ultra hızlı, tutarlı ve responsive stil katmanı. |
-| **Framer Motion** | Uygulamaya premium hissi veren akıcı, fizik tabanlı mikro-animasyonlar. |
-| **Recharts** | İstatistik ve performans verilerinde kullanılan yüksek performanslı SVG grafikleri. |
-| **Lucide React** | Temiz, tutarlı, özelleştirilebilir ve hafif modern vektör ikon seti. |
+- **Frontend:** React.js (Hooks & Context API)
+- **Styling:** Vanilla CSS & Tailwind CSS for modern aesthetics
+- **Animations:** Framer Motion for smooth glassmorphism transitions
+- **Visualization:** Recharts for industrial metric dashboards
+- **Tooling:** Lucide React for consistent iconography
 
 ---
 
-## 🌑 Karanlık Mod (Dark Mode) Mimarisi
+## 🏗️ Installation
 
-Kullanıcı deneyimi (UX) en üst düzeyde tutularak sistem **%100 Karanlık Mod** uyumlu geliştirilmiştir. Uzun saatler boyunca ekrana bakan İK profesyonellerinin göz yorgunluğunu (eye strain) azaltmak için sadece renkler tersine çevrilmekle kalınmamış; gölgeler (shadow-depth), Glassmorphism bulanıklık (blur) dengesi ve kontrast oranları özel olarak kalibre edilmiştir.
+Follow these steps to run HRCore locally:
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Brke77/HRCore-App.git
+   cd HRCore-App
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
 
 ---
 
-## 🚀 Kurulum (Installation)
+## 📐 Industrial Engineering (IE) Perspective
 
-Projeyi kendi ortamınızda çalıştırmak ve test etmek için aşağıdaki adımları sırasıyla terminalinizde çalıştırın:
+This project serves as a digital laboratory for applying theoretical IE concepts into a corporate software environment:
 
-```bash
-# 1. Projeyi bilgisayarınıza klonlayın
-git clone https://github.com/KULLANICI_ADINIZ/hrcore.git
+- **Kaizen (Continuous Improvement):** Implemented via the real-time feedback loop between managers and personnel.
+- **OHS-II (Safety Management):** Reflecting proactive risk evaluation rather than reactive incident recording.
+- **WIP & Lead Time Analysis:** Digitizing recruitment pipelines to identify and eliminate non-value-added activities.
+- **Lean Management:** Using Pareto analysis to prioritize system improvements and capacity planning modules to optimize workforce allocation.
 
-# 2. Proje dizinine giriş yapın
-cd hrcore
+---
 
-# 3. Gerekli kütüphaneleri (dependencies) yükleyin
-npm install
+## 🎨 UI/UX Philosophy
 
-# 4. Geliştirici sunucusunu başlatın
-npm run dev
-```
+HRCore features a **Premium Dark Aesthetic** designed to minimize eye strain while highlighting critical data:
+- **Glassmorphism:** Elegant backdrop-blur effects for modals and sidebars.
+- **Context-Aware Side Panels:** A dynamic right-bar that reacts to user selection for instant deep-dives.
+- **Micro-animations:** Subtle interactions that provide tactile feedback to user actions.
 
-> Sunucu başlatıldıktan sonra tarayıcınızdan uygulamanın çalıştığını görebilirsiniz (varsayılan: `http://localhost:5173` veya `http://localhost:5174`).
+---
+
+## 🤝 Contact & Contribution
+
+Designed with 🧡 by an Industrial Engineer passionate about Full-Stack Development.
+Feel free to open an issue or submit a pull request for improvements!
+
+**License:** MIT
