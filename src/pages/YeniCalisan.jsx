@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Camera, Pencil, User, Network, ChevronDown, Mail, Phone, Calendar, Save } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Camera, Pencil, User, Network, ChevronDown, Mail, Phone, Calendar, Save, CheckCircle } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { useUser } from '../context/UserContext';
+import { sendWelcomeEmail } from '../utils/mailService';
 
 export default function YeniCalisan() {
   const navigate = useNavigate();
   const { addEmployee } = useApp();
+  const { activeUser } = useUser();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -15,7 +18,19 @@ export default function YeniCalisan() {
     phone: '',
     startDate: '',
   });
+  const [sendEmail, setSendEmail] = useState(true);
   const [error, setError] = useState('');
+  const [successToast, setSuccessToast] = useState('');
+
+  // Güvenlik: Kullanıcı yoksa veya yetkisiz ise null dön/yetki hatası ver
+  if (!activeUser) return null;
+  if (activeUser.role !== 'ik_muduru' && activeUser.role !== 'admin') {
+    return (
+      <div className="flex-1 flex items-center justify-center bg-slate-50 dark:bg-slate-900/80 backdrop-blur-md">
+        <p className="text-slate-500 dark:text-slate-400 font-bold">Bu sayfaya erişim yetkiniz bulunmamaktadır.</p>
+      </div>
+    );
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,7 +38,7 @@ export default function YeniCalisan() {
     setError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.department || !formData.email) {
       setError('Lütfen Ad Soyad, Departman ve E-posta alanlarını doldurun.');
@@ -41,16 +56,29 @@ export default function YeniCalisan() {
       avatar: null,
     });
 
-    navigate('/personel-listesi');
+    if (sendEmail) {
+      await sendWelcomeEmail(formData.email, 'temp123!');
+      setSuccessToast('Giriş Bilgileri E-posta ile Gönderildi');
+      setTimeout(() => {
+        navigate('/personel-listesi');
+      }, 2000);
+    } else {
+      navigate('/personel-listesi');
+    }
   };
 
   return (
-    <div className="flex flex-col flex-1 min-w-0 overflow-auto bg-form-background">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="flex flex-col flex-1 min-w-0 overflow-auto bg-slate-50/50 dark:bg-slate-900/80 backdrop-blur-md transition-colors duration-300"
+    >
       <div className="max-w-4xl mx-auto w-full px-12 py-10">
         {/* Page Header */}
         <motion.div
-           initial={{ opacity: 0, y: -10 }}
-           animate={{ opacity: 1, y: 0 }}
+           initial={{ opacity: 0, scale: 0.95, y: -10 }}
+           animate={{ opacity: 1, scale: 1, y: 0 }}
+           transition={{ duration: 0.3 }}
            className="mb-10 flex items-center justify-between"
         >
           <div>
@@ -58,7 +86,15 @@ export default function YeniCalisan() {
             <p className="text-form-secondary font-body mt-2">Sisteme yeni bir ekip üyesi eklemek için aşağıdaki formu doldurun.</p>
           </div>
           <div className="flex gap-2">
-            <span className="px-3 py-1 bg-form-primary-fixed text-form-on-primary-fixed rounded-full text-xs font-bold tracking-widest uppercase">Taslak</span>
+            <AnimatePresence>
+              {successToast && (
+                <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }} className="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-xl shadow-lg font-bold text-sm">
+                  <CheckCircle className="w-4 h-4" />
+                  {successToast}
+                </motion.div>
+              )}
+            </AnimatePresence>
+            {!successToast && <span className="px-3 py-1 bg-form-primary-fixed text-form-on-primary-fixed rounded-full text-xs font-bold tracking-widest uppercase items-center flex">Taslak</span>}
           </div>
         </motion.div>
 
@@ -153,6 +189,13 @@ export default function YeniCalisan() {
               </div>
             </div>
 
+            <div className="flex items-center gap-3 pt-4 border-t border-form-surface-low">
+              <input type="checkbox" id="sendEmail" checked={sendEmail} onChange={(e) => setSendEmail(e.target.checked)} className="w-5 h-5 rounded outline-none border-form-outline focus:ring-2 focus:ring-form-primary/20 accent-form-primary" />
+              <label htmlFor="sendEmail" className="text-sm font-semibold text-form-on-surface cursor-pointer select-none">
+                Kullanıcıya giriş bilgilerini e-posta ile gönder
+              </label>
+            </div>
+
             {/* Action Buttons */}
             <div className="flex items-center justify-end gap-6 pt-10 border-t border-form-surface-low">
               <button type="button" onClick={() => navigate('/personel-listesi')} className="px-8 py-3.5 text-form-secondary font-bold font-body hover:bg-form-surface-highest rounded-xl transition-all duration-200 active:scale-95">
@@ -171,6 +214,6 @@ export default function YeniCalisan() {
           <p className="text-[11px] text-slate-400 font-medium uppercase tracking-widest">HRCore v2.4 — Human Capital Management System</p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

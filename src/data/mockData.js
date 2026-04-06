@@ -165,6 +165,7 @@ export const EMPLOYEES = RAW_EMPLOYEES.map((emp) => {
 
   return {
     ...emp,
+    comments: [], // Yönetici yorumları: { id, text, authorName, authorRole, authorRoleLabel, type, date }
     payrollData: {
       gross: baseGross,
       net: netSalary,

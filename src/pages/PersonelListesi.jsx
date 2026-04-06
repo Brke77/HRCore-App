@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import EmployeeTable from '../components/EmployeeTable';
 import QuickView from '../components/QuickView';
 import { useApp } from '../context/AppContext';
+import { useUser } from '../context/UserContext';
 
 const DEPARTMENTS = ['Tüm Departmanlar', 'Yazılım', 'Pazarlama', 'İK', 'Finans'];
 const STATUSES = ['Tüm Durumlar', 'Aktif', 'İzinli', 'Ayrıldı'];
@@ -13,6 +14,7 @@ const LOCATIONS = ['Tüm Lokasyonlar', 'İstanbul', 'Ankara', 'İzmir', 'Uzaktan
 
 export default function PersonelListesi() {
   const { employees } = useApp();
+  const { activeUser } = useUser();
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [department, setDepartment] = useState('Tüm Departmanlar');
@@ -21,6 +23,11 @@ export default function PersonelListesi() {
 
   const filtered = useMemo(() => {
     return employees.filter((emp) => {
+      // Yetki (Data Isolation) kontrolü
+      if (!activeUser?.isSuperAdmin && activeUser?.department !== 'Global') {
+         if (emp.department !== activeUser?.department) return false;
+      }
+
       const q = search.toLowerCase();
       const matchSearch =
         !q ||
@@ -57,15 +64,17 @@ export default function PersonelListesi() {
               Toplam <span className="text-slate-600 dark:text-slate-300 font-semibold">{filtered.length}</span> çalışan listeleniyor
             </p>
           </div>
-          <motion.button
-            onClick={() => navigate('/yeni-personel')}
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-            className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl font-bold text-sm hover:bg-primary-600 transition-colors shadow-lg shadow-primary/25"
-          >
-            <Plus className="w-4 h-4" />
-            Yeni Çalışan Ekle
-          </motion.button>
+          {(activeUser?.role === 'ik_muduru' || activeUser?.role === 'admin') && (
+            <motion.button
+              onClick={() => navigate('/yeni-personel')}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl font-bold text-sm hover:bg-primary-600 transition-colors shadow-lg shadow-primary/25"
+            >
+              <Plus className="w-4 h-4" />
+              Yeni Çalışan Ekle
+            </motion.button>
+          )}
         </motion.div>
 
         {/* Filters */}

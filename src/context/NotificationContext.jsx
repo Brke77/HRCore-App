@@ -4,10 +4,10 @@ const NotificationContext = createContext(null);
 
 // Initial mock notifications
 const INITIAL_NOTIFICATIONS = [
-  { id: 'n1', text: 'Yeni izin talebi geldi — Ahmet Yılmaz', time: '5 dk önce', read: false, icon: '📋' },
-  { id: 'n2', text: 'Performans değerlendirme dönemi başladı', time: '1 saat önce', read: false, icon: '📊' },
-  { id: 'n3', text: 'Nisan 2026 bordroları oluşturuldu', time: '3 saat önce', read: true, icon: '💰' },
-  { id: 'n4', text: 'İSG eğitim belgeleri güncellendi', time: 'Dün', read: true, icon: '📄' },
+  { id: 'n1', type: 'LEAVE', title: 'İzin Talebi', message: 'Ahmet Yılmaz yeni bir izin talebi gönderdi.', targetId: 'emp_1', targetDepartment: 'Yazılım', timestamp: '5 dk önce', isRead: false },
+  { id: 'n2', type: 'PERFORMANCE', title: 'Performans Geri Bildirimi', message: 'Can Berk son görevi tamamladı.', targetId: 'emp_2', targetRole: 'departman_muduru', timestamp: '1 saat önce', isRead: false },
+  { id: 'n3', type: 'SYSTEM', title: 'Sistem Güncellemesi', message: 'Nisan 2026 bordroları oluşturuldu.', targetId: null, timestamp: '3 saat önce', isRead: true },
+  { id: 'n4', type: 'SAFETY', title: 'İSG Durum Raporu', message: 'İSG eğitim belgeleri yenilendi.', targetId: 'risk_1', timestamp: 'Dün', isRead: true },
 ];
 
 // Initial mock audit logs
@@ -29,34 +29,47 @@ export function NotificationProvider({ children }) {
     performance: true,
   });
 
-  const unreadCount = notifications.filter(n => !n.read).length;
+  const unreadCount = notifications.filter(n => !n.isRead).length;
   const hasUnread = preferences.leave || preferences.system ? unreadCount > 0 : false;
 
   const markAllRead = useCallback(() => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
   }, []);
 
   const markAsRead = useCallback((id) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n));
+  }, []);
+  
+  const clearAllNotifications = useCallback(() => {
+    setNotifications([]);
   }, []);
 
-  const addNotification = useCallback((text, icon = '🔔') => {
+  const addNotification = useCallback((params) => {
     setNotifications(prev => [{
       id: 'n' + Date.now(),
-      text,
-      time: 'Şimdi',
-      read: false,
-      icon,
+      timestamp: 'Şimdi',
+      isRead: false,
+      ...params,
     }, ...prev]);
   }, []);
 
-  const addAuditLog = useCallback((text, type = 'system') => {
+  const addAuditLog = useCallback((text, type = 'system', meta = {}) => {
     setAuditLogs(prev => [{
       id: 'a' + Date.now(),
       text,
       time: 'Şimdi',
       type,
+      meta,
     }, ...prev]);
+  }, []);
+
+  const approveAuditLog = useCallback((id) => {
+    setAuditLogs(prev => prev.map(log => {
+      if (log.id === id) {
+        return { ...log, meta: { ...log.meta, isApproved: true } };
+      }
+      return log;
+    }));
   }, []);
 
   const updatePreference = useCallback((key, value) => {
@@ -72,8 +85,10 @@ export function NotificationProvider({ children }) {
       hasUnread,
       markAllRead,
       markAsRead,
+      clearAllNotifications,
       addNotification,
       addAuditLog,
+      approveAuditLog,
       updatePreference,
     }}>
       {children}

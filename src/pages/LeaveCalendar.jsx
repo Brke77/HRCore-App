@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Plus, Calendar as CalendarIcon, Info, X, MapPin, AlertTriangle, Trash2 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useNotifications } from '../context/NotificationContext';
+import { useUser } from '../context/UserContext';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -11,6 +12,8 @@ function classNames(...classes) {
 export default function LeaveCalendar() {
   const { employees, leaveRequests, addLeaveRequest, cancelLeave } = useApp();
   const { addNotification, addAuditLog } = useNotifications();
+  const { activeUser } = useUser();
+  const isSuperAdmin = activeUser.isSuperAdmin || activeUser.department === 'Global';
   
   // Simulate today's date context properly, as requested by the user: "Bugünün tarihi (5 Nisan 2026)"
   const fakeToday = new Date('2026-04-05T12:00:00');
@@ -49,10 +52,13 @@ export default function LeaveCalendar() {
         department: emp?.department || 'Bilinmiyor'
       };
     }).filter(req => {
+      if (!isSuperAdmin) {
+         return req.department.toLowerCase() === activeUser.department.toLowerCase();
+      }
       if (departmentFilter === 'Tüm Departmanlar') return true;
       return req.department.toLowerCase() === departmentFilter.toLowerCase();
     });
-  }, [leaveRequests, employees, departmentFilter]);
+  }, [leaveRequests, employees, departmentFilter, isSuperAdmin, activeUser.department]);
 
   const calendarGrid = useMemo(() => {
     const year = currentDate.getFullYear();
@@ -201,7 +207,7 @@ export default function LeaveCalendar() {
         <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
           <div className="flex items-center gap-6">
             <h2 className="text-3xl font-bold font-headline text-slate-900 dark:text-white tracking-tight flex items-center gap-3 transition-colors duration-300">
-              İzin Takvimi
+              {!isSuperAdmin ? `${activeUser.department} Departmanı ` : ''}İzin Takvimi
             </h2>
             <div className="flex items-center gap-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm p-1.5 border border-slate-100 dark:border-slate-700 transition-colors duration-300">
               <button onClick={prevMonth} className="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg text-slate-500 dark:text-slate-300 transition-colors">
@@ -221,19 +227,21 @@ export default function LeaveCalendar() {
           </div>
           
           <div className="flex items-center gap-4">
-            <div className="relative">
-              <select 
-                value={departmentFilter}
-                onChange={(e) => setDepartmentFilter(e.target.value)}
-                className="appearance-none pl-4 pr-10 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm transition-all cursor-pointer"
-              >
-                <option value="Tüm Departmanlar">Tüm Departmanlar</option>
-                <option value="Yazılım">Yazılım</option>
-                <option value="Pazarlama">Pazarlama</option>
-                <option value="İK">İnsan Kaynakları</option>
-              </select>
-              <ChevronLeft className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500 rotate-[-90deg] pointer-events-none transition-colors" />
-            </div>
+            {isSuperAdmin && (
+              <div className="relative">
+                <select 
+                  value={departmentFilter}
+                  onChange={(e) => setDepartmentFilter(e.target.value)}
+                  className="appearance-none pl-4 pr-10 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-medium text-sm text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-primary/20 shadow-sm transition-all cursor-pointer"
+                >
+                  <option value="Tüm Departmanlar">Tüm Departmanlar</option>
+                  <option value="Yazılım">Yazılım</option>
+                  <option value="Pazarlama">Pazarlama</option>
+                  <option value="İK">İnsan Kaynakları</option>
+                </select>
+                <ChevronLeft className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500 rotate-[-90deg] pointer-events-none transition-colors" />
+              </div>
+            )}
 
             <button 
               onClick={() => setIsModalOpen(true)}
@@ -261,6 +269,15 @@ export default function LeaveCalendar() {
           </div>
 
           {/* Calendar Body */}
+          {processedLeaves.length === 0 && (
+            <div className="absolute inset-x-0 top-32 bottom-0 z-10 flex flex-col items-center justify-center p-8 bg-white/40 dark:bg-slate-950/40 backdrop-blur-[2px]">
+              <div className="w-20 h-20 bg-slate-100 dark:bg-slate-800/80 border border-white dark:border-slate-700/50 rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-slate-200/50 dark:shadow-none transition-colors">
+                <CalendarIcon className="w-10 h-10 text-slate-400 dark:text-slate-500" />
+              </div>
+              <h3 className="text-xl font-bold font-headline text-slate-800 dark:text-slate-200 mb-2">İzin Kaydı Bulunmuyor</h3>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400 text-center max-w-sm">Bu departmanda henüz planlanmış veya onaylanmış bir izin kaydı bulunmamaktadır.</p>
+            </div>
+          )}
           <div className="grid grid-cols-7 divide-x divide-y divide-slate-100/60 dark:divide-slate-800 bg-white dark:bg-slate-950 transition-colors duration-300">
             {calendarGrid.map((dayData, i) => {
               const leaves = getLeavesForDate(dayData.date);
@@ -431,7 +448,9 @@ export default function LeaveCalendar() {
                     <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5 ml-1 transition-colors">Personel Seçin</label>
                     <select required value={modalForm.employeeId} onChange={e => setModalForm(prev => ({...prev, employeeId: e.target.value}))} className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-primary/20 outline-none transition-all cursor-pointer">
                       <option value="">Seçiniz...</option>
-                      {employees.map(e => <option key={e.id} value={e.id}>{e.name} - {e.department}</option>)}
+                      {employees
+                        .filter(emp => isSuperAdmin || emp.department === activeUser.department)
+                        .map(e => <option key={e.id} value={e.id}>{e.name} - {e.department}</option>)}
                     </select>
                   </div>
                   

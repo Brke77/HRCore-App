@@ -1,93 +1,189 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Public+Sans:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
-@layer base {
-  * {
-    box-sizing: border-box;
-  }
-
-  html {
-    scroll-behavior: smooth;
-  }
-
-  body {
-    font-family: 'Inter', 'Public Sans', sans-serif;
-    @apply bg-slate-50 text-slate-900 antialiased;
-    @apply dark:bg-slate-900 dark:text-slate-100;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
+/* ── Base Layer ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
-@layer components {
-  .glass-card {
-    @apply bg-white/70 backdrop-blur-sm border border-white/80 shadow-sm;
-    @apply dark:bg-slate-800/70 dark:border-slate-700/60;
-  }
-
-  .nav-item {
-    @apply flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 text-sm font-medium cursor-pointer;
-  }
-
-  .nav-item-inactive {
-    @apply text-slate-500 hover:bg-slate-100 hover:text-slate-800;
-    @apply dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200;
-  }
-
-  .nav-item-active {
-    @apply bg-orange-50 text-orange-600 font-semibold;
-    @apply dark:bg-primary/15 dark:text-primary-300;
-  }
-
-  .badge-active {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-100 text-emerald-700;
-    @apply dark:bg-emerald-900/40 dark:text-emerald-400;
-  }
-
-  .badge-leave {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-700;
-    @apply dark:bg-amber-900/40 dark:text-amber-400;
-  }
-
-  .badge-left {
-    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-100 text-red-700;
-    @apply dark:bg-red-900/40 dark:text-red-400;
-  }
-
-  /* Dark mode card utility */
-  .card {
-    @apply bg-white border border-slate-200 shadow-sm;
-    @apply dark:bg-slate-800 dark:border-slate-700;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
-@layer utilities {
-  .scrollbar-thin::-webkit-scrollbar {
-    width: 4px;
-  }
-  .scrollbar-thin::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: #e2e8f0;
-    border-radius: 999px;
-  }
-  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background-color: #cbd5e1;
-  }
+body {
+  font-family: 'Inter', 'Public Sans', sans-serif;
+  background-color: #f8fafc;         /* slate-50 */
+  color: #0f172a;                     /* slate-900 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-  .dark .scrollbar-thin::-webkit-scrollbar-thumb {
-    background-color: #334155;
-  }
-  .dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background-color: #475569;
-  }
+.dark body {
+  background-color: #0f172a;          /* slate-900 */
+  color: #f1f5f9;                     /* slate-100 */
+}
 
-  .donut-segment {
-    transform: rotate(-90deg);
-    transform-origin: 50% 50%;
-    transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+/* ── Component: Glass Card ── */
+.glass-card {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.dark .glass-card {
+  background-color: rgba(30, 41, 59, 0.7);   /* slate-800/70 */
+  border-color: rgba(51, 65, 85, 0.6);        /* slate-700/60 */
+}
+
+/* ── Component: Nav Item ── */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.nav-item-inactive {
+  color: #64748b;                     /* slate-500 */
+}
+
+.nav-item-inactive:hover {
+  background-color: #f1f5f9;          /* slate-100 */
+  color: #1e293b;                     /* slate-800 */
+}
+
+.dark .nav-item-inactive {
+  color: #94a3b8;                     /* slate-400 */
+}
+
+.dark .nav-item-inactive:hover {
+  background-color: #334155;          /* slate-700 */
+  color: #e2e8f0;                     /* slate-200 */
+}
+
+/* ── Component: Nav Item Active ── */
+.nav-item-active {
+  background-color: #fff7ed;          /* orange-50 */
+  color: #ea580c;                     /* orange-600 */
+  font-weight: 600;
+}
+
+.dark .nav-item-active {
+  background-color: rgba(236, 91, 19, 0.15);  /* primary/15 */
+  color: #ffa172;                              /* primary-300 */
+}
+
+/* ── Component: Badge Active ── */
+.badge-active {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 700;
+  background-color: #d1fae5;          /* emerald-100 */
+  color: #047857;                     /* emerald-700 */
+}
+
+.dark .badge-active {
+  background-color: rgba(6, 78, 59, 0.4);     /* emerald-900/40 */
+  color: #34d399;                              /* emerald-400 */
+}
+
+/* ── Component: Badge Leave ── */
+.badge-leave {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 700;
+  background-color: #fef3c7;          /* amber-100 */
+  color: #b45309;                     /* amber-700 */
+}
+
+.dark .badge-leave {
+  background-color: rgba(120, 53, 15, 0.4);   /* amber-900/40 */
+  color: #fbbf24;                              /* amber-400 */
+}
+
+/* ── Component: Badge Left ── */
+.badge-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.125rem 0.625rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 700;
+  background-color: #fee2e2;          /* red-100 */
+  color: #b91c1c;                     /* red-700 */
+}
+
+.dark .badge-left {
+  background-color: rgba(127, 29, 29, 0.4);   /* red-900/40 */
+  color: #f87171;                              /* red-400 */
+}
+
+/* ── Component: Card ── */
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;          /* slate-200 */
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.dark .card {
+  background-color: #1e293b;          /* slate-800 */
+  border-color: #334155;              /* slate-700 */
+}
+
+/* ── Utility: Thin Scrollbar ── */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #e2e8f0;
+  border-radius: 999px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: #cbd5e1;
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #334155;
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: #475569;
+}
+
+/* ── Utility: Donut Chart Segment ── */
+.donut-segment {
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }

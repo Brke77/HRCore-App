@@ -45,6 +45,7 @@ export default function EmployeeTable({ employees }) {
               <th className="px-6 py-4">Departman</th>
               <th className="px-6 py-4">E-posta / Telefon</th>
               <th className="px-6 py-4">İşe Giriş</th>
+              <th className="px-6 py-4 text-center">Puan</th>
               <th className="px-6 py-4 text-center">Durum</th>
               <th className="px-6 py-4 text-right">İşlemler</th>
             </tr>
@@ -90,6 +91,11 @@ export default function EmployeeTable({ employees }) {
                     </div>
                   </td>
                   <td className="px-6 py-4 text-sm font-medium text-slate-500 dark:text-slate-400">{emp.startDate}</td>
+                  <td className="px-6 py-4 text-center">
+                    <span className="inline-flex items-center gap-1 font-bold text-xs text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 px-2 py-1 rounded-lg">
+                       <span className="text-yellow-500">⭐</span> {emp.performanceScore || 85}
+                    </span>
+                  </td>
                   <td className="px-6 py-4 text-center">
                     <span className={STATUS_BADGE[emp.status] || STATUS_BADGE.Aktif}>
                       <span className={`w-1.5 h-1.5 rounded-full ${STATUS_DOT[emp.status] || STATUS_DOT.Aktif}`} />

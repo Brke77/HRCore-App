@@ -2,6 +2,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Check, X, Clock } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { useNotifications } from '../context/NotificationContext';
+import { useUser } from '../context/UserContext';
 
 const TYPE_COLORS = {
   blue:   'bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
@@ -28,6 +29,13 @@ function AvatarFallback({ name }) {
 export default function LeaveRequestTable() {
   const { leaveRequests, approveRequest, rejectRequest, setSelectedEmployee, employees } = useApp();
   const { addAuditLog, addNotification } = useNotifications();
+  const { activeUser } = useUser();
+
+  const filteredRequests = leaveRequests.filter((req) => {
+    if (activeUser.isSuperAdmin || activeUser.department === 'Global') return true;
+    const emp = employees.find((e) => e.id === req.employeeId);
+    return emp?.department === activeUser.department;
+  });
 
   const handleSelectEmployee = (employeeId) => {
     const emp = employees.find((e) => e.id === employeeId);
@@ -36,13 +44,13 @@ export default function LeaveRequestTable() {
 
   const handleApprove = (req) => {
     approveRequest(req.id);
-    addAuditLog(`Selin Yılmaz, ${req.name}'ın izin talebini onayladı`, 'approve');
+    addAuditLog(`${activeUser.name}, ${req.name}'ın izin talebini onayladı`, 'approve');
     addNotification(`${req.name}'ın izin talebi onaylandı`, '✅');
   };
 
   const handleReject = (req) => {
     rejectRequest(req.id);
-    addAuditLog(`Selin Yılmaz, ${req.name}'ın izin talebini reddetti`, 'reject');
+    addAuditLog(`${activeUser.name}, ${req.name}'ın izin talebini reddetti`, 'reject');
   };
 
   return (
@@ -56,16 +64,16 @@ export default function LeaveRequestTable() {
         <div className="flex items-center gap-3">
           <Clock className="w-5 h-5 text-amber-500" />
           <h2 className="text-lg font-bold text-slate-800 dark:text-white">Onay Bekleyen Talepler</h2>
-          {leaveRequests.length > 0 && (
+          {filteredRequests.length > 0 && (
             <span className="px-2 py-0.5 rounded-full bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 text-xs font-bold">
-              {leaveRequests.length}
+              {filteredRequests.length}
             </span>
           )}
         </div>
         <button className="text-primary text-sm font-semibold hover:underline">Tümünü Gör</button>
       </div>
 
-      {leaveRequests.length === 0 ? (
+      {filteredRequests.length === 0 ? (
         <div className="p-12 text-center">
           <div className="w-14 h-14 mx-auto rounded-full bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center mb-3">
             <Check className="w-7 h-7 text-emerald-500" />
@@ -86,7 +94,7 @@ export default function LeaveRequestTable() {
             </thead>
             <tbody>
               <AnimatePresence>
-                {leaveRequests.map((req, i) => (
+                {filteredRequests.map((req, i) => (
                   <motion.tr
                     key={req.id}
                     variants={rowVariants}
