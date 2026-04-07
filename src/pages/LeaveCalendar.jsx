@@ -192,7 +192,12 @@ export default function LeaveCalendar() {
     const { employeeId, id, name } = cancelModal.leaf;
     cancelLeave(employeeId, id);
     addAuditLog(`Selin Yılmaz, ${name} adlı kişinin iznini iptal etti.`, 'system'); 
-    addNotification(`${name} adlı kişinin izni başarıyla iptal edildi ve bakiye iade edildi.`, '✅');
+    addNotification({
+      type: 'LEAVE',
+      title: 'Izin Kaydi Iptal Edildi',
+      message: `${name} adli kisinin izin bakiyesi iade edildi.`,
+      targetId: id,
+    });
     
     setCancelModal({ isOpen: false, leaf: null });
   };

@@ -100,19 +100,22 @@ function ManagerNotesSection({ emp }) {
   const { activeUser } = useUser();
   const [text, setText] = useState('');
 
-  const canComment = (activeUser.canCommentPerformance && activeUser.canViewPerformance) ||
-                     (activeUser.canCommentPayroll && activeUser.canViewPayroll);
+  const canComment = Boolean(
+    (activeUser?.canCommentPerformance && activeUser?.canViewPerformance) ||
+      (activeUser?.canCommentPayroll && activeUser?.canViewPayroll) ||
+      activeUser?.isSuperAdmin
+  );
 
   // Rolüne göre hangi yorumları görebilir
   const visibleComments = (emp.comments || []).filter((c) => {
-    if (activeUser.role === 'admin') return true;
-    if (activeUser.canViewPerformance && c.type === 'performance') return true;
-    if (activeUser.canViewPayroll && c.type === 'payroll') return true;
+    if (activeUser?.isSuperAdmin) return true;
+    if (activeUser?.canViewPerformance && c.type === 'performance') return true;
+    if (activeUser?.canViewPayroll && c.type === 'payroll') return true;
     return false;
   });
 
   // Yorum tipi rolüne göre belirlenir
-  const commentType = activeUser.canCommentPayroll && !activeUser.canCommentPerformance
+  const commentType = activeUser?.canCommentPayroll && !activeUser?.canCommentPerformance
     ? 'payroll'
     : 'performance';
 
@@ -120,9 +123,9 @@ function ManagerNotesSection({ emp }) {
     if (!text.trim()) return;
     addComment(emp.id, {
       text: text.trim(),
-      authorName: activeUser.name,
-      authorRole: activeUser.role,
-      authorRoleLabel: activeUser.roleLabel,
+      authorName: activeUser?.name || 'Kullanıcı',
+      authorRole: activeUser?.role || 'personel',
+      authorRoleLabel: activeUser?.roleLabel || 'Employee',
       type: commentType,
     });
     setText('');
@@ -162,9 +165,9 @@ function ManagerNotesSection({ emp }) {
           <div className="flex items-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
             <Lock className="w-3 h-3" />
             <span>
-              {activeUser.role === 'finans_muduru'
+              {activeUser?.role === 'finans_muduru'
                 ? 'Yalnızca finansal notlar ekliyorsunuz'
-                : activeUser.role === 'ik_muduru'
+                : activeUser?.role === 'ik_muduru'
                 ? 'Yalnızca performans notları ekliyorsunuz'
                 : 'Tüm not türlerini ekleyebilirsiniz'}
             </span>
@@ -203,23 +206,25 @@ export default function QuickView() {
 
   const handleMakeManager = () => {
     makeManager(emp.id);
-    addAuditLog(`${activeUser.name}, ${emp.name} adlı personeli Müdür olarak atadı.`, 'role');
+    addAuditLog(`${activeUser?.name || 'Yönetici'}, ${emp.name} adlı personeli Müdür olarak atadı.`, 'role');
   };
 
   const handleDelete = () => {
     deleteEmployee(emp.id);
     setShowConfirmDelete(false);
-    addAuditLog(`${activeUser.name}, ${emp.name} adlı personelin ilişiğini kesti.`, 'system');
+    addAuditLog(`${activeUser?.name || 'Yönetici'}, ${emp.name} adlı personelin ilişiğini kesti.`, 'system');
   };
 
   const handleApprove = (activityId) => {
     approveEmployeeActivity(emp.name, activityId);
     updateEmployeePerformance(emp.name, +5);
-    addNotification(
-      `Müdürünüz son hareketinizi onayladı ve +5 performans puanı kazandınız!`,
-      '⭐',
-      { role: 'personel', department: emp.department }
-    );
+    addNotification({
+      type: 'SYSTEM',
+      title: 'Tebrikler',
+      message: 'Mudrunuz son hareketinizi onayladi ve +5 performans puani kazandiniz!',
+      targetRole: 'personel',
+      targetDepartment: emp.department,
+    });
   };
 
   if (!emp) {
@@ -382,7 +387,7 @@ export default function QuickView() {
                   </div>
 
                   {/* Aferin Onay Butonu (Yönetici için) */}
-                  {act.type === 'feed' && !act.isApproved && activeUser?.role !== 'personel' && activeUser?.department === emp.department && (
+                  {act.type === 'feed' && !act.isApproved && activeUser?.role !== 'personel' && (activeUser?.isSuperAdmin || activeUser?.department === emp.department) && (
                     <div className="flex pl-8 mt-1">
                       <button
                         onClick={() => handleApprove(act.id)}
@@ -406,7 +411,7 @@ export default function QuickView() {
               {(emp.comments?.length > 0) && (
                 <span className="ml-auto text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-primary/10 text-primary">
                   {emp.comments.filter(c =>
-                    activeUser?.role === 'admin' ||
+                    activeUser?.isSuperAdmin ||
                     (activeUser?.canViewPerformance && c.type === 'performance') ||
                     (activeUser?.canViewPayroll && c.type === 'payroll')
                   ).length}

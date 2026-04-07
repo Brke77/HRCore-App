@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../context/AppContext';
 import { useTheme } from '../context/ThemeContext';
 import { useNotifications } from '../context/NotificationContext';
+import { useAuth } from '../context/AuthContext';
+import { useUser } from '../context/UserContext';
 import { 
   User, Monitor, Bell, Database, ShieldCheck, 
   Camera, Lock, Globe, Moon, Sun, Mail, Download, 
@@ -44,10 +46,18 @@ const AUDIT_ICONS = {
 export default function Settings() {
   const { employees } = useApp();
   const { darkMode, setDarkMode } = useTheme();
-  const { preferences, updatePreference, auditLogs } = useNotifications();
+  const { preferences, updatePreference, auditLogs, addNotification, addAuditLog } = useNotifications();
+  const { currentUser, changePassword } = useAuth();
+  const { activeUser } = useUser();
   const [activeTab, setActiveTab] = useState('profile');
   const [language, setLanguage] = useState('tr');
   const [showLogs, setShowLogs] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: '',
+    nextPassword: '',
+    confirmPassword: '',
+  });
+  const [passwordFeedback, setPasswordFeedback] = useState({ type: '', message: '' });
 
   const TABS = [
     { id: 'profile', label: 'Profil Ayarları', icon: User },
@@ -77,35 +87,81 @@ export default function Settings() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Ad Soyad</label>
-                      <input type="text" defaultValue="Selin Yılmaz" className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-primary/20 outline-none transition-all" />
+                      <input type="text" value={currentUser?.name || ''} readOnly className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-primary/20 outline-none transition-all" />
                     </div>
                     <div>
                       <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">E-posta</label>
-                      <input type="email" defaultValue="selin.yilmaz@hrcore.com" className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-primary/20 outline-none transition-all" />
+                      <input type="email" value={currentUser?.email || ''} readOnly className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-primary/20 outline-none transition-all" />
                     </div>
                   </div>
-                  <button className="px-6 py-2.5 bg-slate-800 dark:bg-slate-600 text-white text-sm font-bold rounded-xl hover:bg-slate-700 dark:hover:bg-slate-500 transition-colors">
-                    Değişiklikleri Kaydet
-                  </button>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Rol</label>
+                      <input type="text" value={currentUser?.roleLabel || '-'} readOnly className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 outline-none transition-all" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Departman</label>
+                      <input type="text" value={currentUser?.department || '-'} readOnly className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 outline-none transition-all" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
             <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 transition-colors">
               <h3 className="text-lg font-bold text-slate-800 dark:text-white mb-6 flex items-center gap-2"><Lock className="w-5 h-5 text-slate-400 dark:text-slate-500"/> Şifre Güncelleme</h3>
-              <div className="space-y-4 max-w-md">
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  const result = changePassword(passwordForm);
+                  setPasswordFeedback({
+                    type: result.success ? 'success' : 'error',
+                    message: result.message,
+                  });
+
+                  if (!result.success) return;
+
+                  setPasswordForm({
+                    currentPassword: '',
+                    nextPassword: '',
+                    confirmPassword: '',
+                  });
+                  addAuditLog(`${activeUser?.name || 'Kullanıcı'} hesap şifresini güncelledi.`, 'system');
+                  addNotification({
+                    type: 'SYSTEM',
+                    title: 'Şifre Güncellendi',
+                    message: 'Şifreniz başarıyla değiştirildi.',
+                    targetId: activeUser?.id,
+                  });
+                }}
+                className="space-y-4 max-w-md"
+              >
                 <div>
                   <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Mevcut Şifre</label>
-                  <input type="password" placeholder="••••••••" className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-primary/20 outline-none transition-all" />
+                  <input type="password" value={passwordForm.currentPassword} onChange={(event) => setPasswordForm((prev) => ({ ...prev, currentPassword: event.target.value }))} placeholder="••••••••" className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-primary/20 outline-none transition-all" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Yeni Şifre</label>
-                  <input type="password" placeholder="••••••••" className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-primary/20 outline-none transition-all" />
+                  <input type="password" value={passwordForm.nextPassword} onChange={(event) => setPasswordForm((prev) => ({ ...prev, nextPassword: event.target.value }))} placeholder="••••••••" className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-primary/20 outline-none transition-all" />
                 </div>
-                <button className="px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary-600 transition-colors shadow-lg shadow-primary/20 mt-2">
+                <div>
+                  <label className="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">Yeni Şifre Tekrar</label>
+                  <input type="password" value={passwordForm.confirmPassword} onChange={(event) => setPasswordForm((prev) => ({ ...prev, confirmPassword: event.target.value }))} placeholder="••••••••" className="w-full px-4 py-2.5 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-primary/20 outline-none transition-all" />
+                </div>
+                {passwordFeedback.message && (
+                  <div className={classNames(
+                    'rounded-xl border px-4 py-3 text-sm font-medium',
+                    passwordFeedback.type === 'success'
+                      ? 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-800/40 dark:bg-emerald-900/20 dark:text-emerald-300'
+                      : 'border-red-200 bg-red-50 text-red-700 dark:border-red-800/40 dark:bg-red-900/20 dark:text-red-300'
+                  )}>
+                    {passwordFeedback.message}
+                  </div>
+                )}
+                <button type="submit" className="px-6 py-2.5 bg-primary text-white text-sm font-bold rounded-xl hover:bg-primary-600 transition-colors shadow-lg shadow-primary/20 mt-2">
                   Şifreyi Güncelle
                 </button>
-              </div>
+              </form>
             </div>
           </div>
         );

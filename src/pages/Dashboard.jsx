@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
-import { Users, Sunrise, Clock, History, CheckCircle, UserPlus, DollarSign, ShieldCheck, Settings2, FileText, HeartPulse } from 'lucide-react';
+import { Users, Sunrise, Clock, History, CheckCircle, UserPlus, DollarSign, ShieldCheck, Settings2, FileText, HeartPulse, AlertTriangle } from 'lucide-react';
 import Header from '../components/Header';
 import StatCard from '../components/StatCard';
 import LeaveRequestTable from '../components/LeaveRequestTable';
@@ -9,6 +9,7 @@ import { useNotifications } from '../context/NotificationContext';
 import { useUser } from '../context/UserContext';
 import { useApp } from '../context/AppContext';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AUDIT_ICONS = {
   approve: { icon: CheckCircle, color: 'text-emerald-500', bg: 'bg-emerald-50 dark:bg-emerald-900/30' },
@@ -21,9 +22,17 @@ const AUDIT_ICONS = {
 };
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const { auditLogs, addAuditLog, approveAuditLog, addNotification } = useNotifications();
   const { activeUser } = useUser();
-  const { employees, leaveRequests, updateEmployeePerformance, addEmployeeActivity } = useApp();
+  const {
+    employees,
+    leaveRequests,
+    updateEmployeePerformance,
+    addEmployeeActivity,
+    capacityRiskDepartments,
+    setFocusedOperationalItem,
+  } = useApp();
   
   const [feedText, setFeedText] = useState('');
   const [moodOption, setMoodOption] = useState(null);
@@ -76,6 +85,22 @@ export default function Dashboard() {
       const emp = employees.find(e => e.id === req.employeeId);
       return emp?.department === activeUser?.department;
   });
+  const visibleBottlenecks = capacityRiskDepartments.filter((item) =>
+    activeUser?.isSuperAdmin || activeUser?.department === 'Global'
+      ? true
+      : item.department === activeUser?.department
+  );
+  const primaryBottleneck = visibleBottlenecks[0];
+
+  const handleOperationalRiskClick = () => {
+    if (!primaryBottleneck) return;
+    setFocusedOperationalItem({
+      department: primaryBottleneck.department,
+      source: 'dashboard-banner',
+      highlightedAt: Date.now(),
+    });
+    navigate('/operasyon-isg');
+  };
 
   const STAT_CARDS = [
     {
@@ -105,6 +130,31 @@ export default function Dashboard() {
     <div className="flex flex-col flex-1 min-w-0 overflow-auto">
       <Header />
       <div className="p-8 space-y-8">
+        {primaryBottleneck && (
+          <motion.div
+            layoutId="operational-risk-focus"
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            onClick={handleOperationalRiskClick}
+            className="rounded-2xl border border-rose-300/40 bg-gradient-to-r from-rose-500/15 via-orange-500/10 to-amber-500/15 px-5 py-4 flex items-center gap-3 shadow-lg shadow-rose-500/10 cursor-pointer transition-transform hover:-translate-y-0.5"
+          >
+            <div className="w-11 h-11 rounded-2xl bg-rose-500 text-white flex items-center justify-center shadow-lg shadow-rose-500/30">
+              <AlertTriangle className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-rose-500 dark:text-rose-300">
+                Operasyonel Risk
+              </p>
+              <p className="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-100">
+                OPERASYONEL RİSK: {primaryBottleneck.department} kapasite baskisi altinda!
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                {primaryBottleneck.overloaded} personelde en az bir gun %90+ yuk var. Heatmap detaylari icin IE Optimizer modülünü açın.
+              </p>
+            </div>
+          </motion.div>
+        )}
+
         {/* Page title */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -252,7 +302,7 @@ export default function Dashboard() {
                   </div>
                   
                   {/* Approval Actions Array */}
-                  {log.type === 'feed' && activeUser?.role !== 'personel' && activeUser?.department === log.meta?.department && !log.meta?.isApproved && (
+                  {log.type === 'feed' && activeUser?.role !== 'personel' && (activeUser?.isSuperAdmin || activeUser?.department === log.meta?.department) && !log.meta?.isApproved && (
                     <div className="pl-13 flex justify-start w-full">
                        <button
                          onClick={() => handleApproveActivity(log)}

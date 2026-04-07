@@ -209,7 +209,11 @@ export default function Recruitment() {
       startDate:  new Date().toISOString().split('T')[0],
       avatar:     `https://ui-avatars.com/api/?name=${encodeURIComponent(candidate.name)}&background=ec5b13&color=fff`,
     });
-    addNotification(`🎉 Tebrikler! ${candidate.name} işe alındı ve çalışan listesine eklendi.`, '🎉');
+    addNotification({
+      type: 'SYSTEM',
+      title: 'Yeni Ise Alim',
+      message: `${candidate.name} ise alindi ve calisan listesine eklendi.`,
+    });
   };
 
   const updateStatus = (candidate, newStatus) => {
@@ -251,7 +255,11 @@ export default function Recruitment() {
         appliedDate: new Date().toISOString().split('T')[0],
       };
       setCandidates(prev => [newCand, ...prev]);
-      addNotification(`Yeni aday ${newCand.name} sisteme eklendi.`, '👤');
+      addNotification({
+        type: 'SYSTEM',
+        title: 'Yeni Aday',
+        message: `${newCand.name} sisteme aday olarak eklendi.`,
+      });
       addAuditLog(`Yeni aday eklendi: ${newCand.name}`, 'add');
     } else {
       // edit mode
@@ -271,7 +279,11 @@ export default function Recruitment() {
         if (fd.status === 'İşe Alındı' && oldCandidate) handleHired({ ...oldCandidate, ...fd });
       }
 
-      addNotification(`${fd.name} adayının bilgileri güncellendi.`, '✏️');
+      addNotification({
+        type: 'SYSTEM',
+        title: 'Aday Guncellendi',
+        message: `${fd.name} adayinin bilgileri guncellendi.`,
+      });
     }
 
     closeFormModal();

@@ -45,7 +45,13 @@ export default function LeaveRequestTable() {
   const handleApprove = (req) => {
     approveRequest(req.id);
     addAuditLog(`${activeUser.name}, ${req.name}'ın izin talebini onayladı`, 'approve');
-    addNotification(`${req.name}'ın izin talebi onaylandı`, '✅');
+    addNotification({
+      type: 'LEAVE',
+      title: 'Izin Talebi Onaylandi',
+      message: `${req.name} icin olusturulan izin talebi onaylandi.`,
+      targetDepartment: activeUser.department,
+      targetId: req.id,
+    });
   };
 
   const handleReject = (req) => {

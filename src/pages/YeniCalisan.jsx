@@ -45,7 +45,7 @@ export default function YeniCalisan() {
       return;
     }
 
-    addEmployee({
+    const createdEmployee = addEmployee({
       name: formData.name,
       title: 'Yeni Çalışan',
       department: formData.department,
@@ -56,15 +56,20 @@ export default function YeniCalisan() {
       avatar: null,
     });
 
-    if (sendEmail) {
-      await sendWelcomeEmail(formData.email, 'temp123!');
-      setSuccessToast('Giriş Bilgileri E-posta ile Gönderildi');
-      setTimeout(() => {
-        navigate('/personel-listesi');
-      }, 2000);
-    } else {
-      navigate('/personel-listesi');
+    if (!createdEmployee) {
+      setError('Personel olusturulurken beklenmeyen bir sorun olustu.');
+      return;
     }
+
+    setSuccessToast(`Personel başarıyla oluşturuldu. Geçici Şifre: ${createdEmployee.password}`);
+
+    if (sendEmail) {
+      await sendWelcomeEmail(createdEmployee.email, createdEmployee.password);
+    }
+
+    setTimeout(() => {
+      navigate('/personel-listesi');
+    }, 2600);
   };
 
   return (

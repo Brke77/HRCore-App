@@ -4,8 +4,8 @@ const NotificationContext = createContext(null);
 
 // Initial mock notifications
 const INITIAL_NOTIFICATIONS = [
-  { id: 'n1', type: 'LEAVE', title: 'İzin Talebi', message: 'Ahmet Yılmaz yeni bir izin talebi gönderdi.', targetId: 'emp_1', targetDepartment: 'Yazılım', timestamp: '5 dk önce', isRead: false },
-  { id: 'n2', type: 'PERFORMANCE', title: 'Performans Geri Bildirimi', message: 'Can Berk son görevi tamamladı.', targetId: 'emp_2', targetRole: 'departman_muduru', timestamp: '1 saat önce', isRead: false },
+  { id: 'n1', type: 'LEAVE', title: 'İzin Talebi', message: 'Can Berk Tokay yeni bir izin talebi gönderdi.', targetId: 'lr1', targetDepartment: 'Yazılım', timestamp: '5 dk önce', isRead: false },
+  { id: 'n2', type: 'PERFORMANCE', title: 'Performans Geri Bildirimi', message: 'Can Berk Tokay son görevi tamamladı.', targetId: 'Can Berk Tokay', targetRole: 'departman_muduru', targetDepartment: 'Yazılım', timestamp: '1 saat önce', isRead: false },
   { id: 'n3', type: 'SYSTEM', title: 'Sistem Güncellemesi', message: 'Nisan 2026 bordroları oluşturuldu.', targetId: null, timestamp: '3 saat önce', isRead: true },
   { id: 'n4', type: 'SAFETY', title: 'İSG Durum Raporu', message: 'İSG eğitim belgeleri yenilendi.', targetId: 'risk_1', timestamp: 'Dün', isRead: true },
 ];

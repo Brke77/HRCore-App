@@ -4,13 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useUser } from '../context/UserContext';
 import { useApp } from '../context/AppContext';
+import { useNotifications } from '../context/NotificationContext';
 import NotificationCenter from './NotificationCenter';
 
 export default function Header({ searchValue = '', onSearch = null, placeholder = 'Personel ara... Ctrl+K' }) {
   const [time, setTime] = useState(new Date());
   const navigate = useNavigate();
-  const { activeUser } = useUser();
+  useUser();
   const { safetyData } = useApp();
+  const { addNotification } = useNotifications();
 
   useEffect(() => {
     const timer = setInterval(() => setTime(new Date()), 1000);
@@ -39,7 +41,12 @@ export default function Header({ searchValue = '', onSearch = null, placeholder 
 
   const handleAlertClick = () => {
     if (criticalRisk) {
-      addNotification(`Kritik İSG Uyarısı: ${criticalRisk.department} departmanı acil müdahale gerektiriyor.`, '⚠️', { department: criticalRisk.department });
+      addNotification({
+        type: 'SAFETY',
+        title: 'Kritik İSG Uyarısı',
+        message: `${criticalRisk.department} departmanı acil müdahale gerektiriyor.`,
+        targetDepartment: criticalRisk.department,
+      });
       navigate('/operasyon-isg');
     }
   };

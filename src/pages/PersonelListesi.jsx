@@ -40,7 +40,7 @@ export default function PersonelListesi() {
       const matchLocation = location === 'Tüm Lokasyonlar' || emp.location === location;
       return matchSearch && matchDept && matchStatus && matchLocation;
     });
-  }, [employees, search, department, status, location]);
+  }, [employees, search, department, status, location, activeUser?.department, activeUser?.isSuperAdmin]);
 
   return (
     <div className="flex flex-col flex-1 min-w-0 overflow-auto">
@@ -64,7 +64,7 @@ export default function PersonelListesi() {
               Toplam <span className="text-slate-600 dark:text-slate-300 font-semibold">{filtered.length}</span> çalışan listeleniyor
             </p>
           </div>
-          {(activeUser?.role === 'ik_muduru' || activeUser?.role === 'admin') && (
+          {(activeUser?.role === 'ik_muduru' || activeUser?.role === 'admin' || activeUser?.isSuperAdmin) && (
             <motion.button
               onClick={() => navigate('/yeni-personel')}
               whileHover={{ scale: 1.03 }}

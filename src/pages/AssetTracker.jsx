@@ -6,9 +6,16 @@ import { useApp } from '../context/AppContext';
 import { useUser } from '../context/UserContext';
 import { useNotifications } from '../context/NotificationContext';
 
+const STOCK_ITEMS = [
+  { name: 'Laptop', stock: 18 },
+  { name: 'Telefon', stock: 12 },
+  { name: 'Koruyucu Gozluk', stock: 31 },
+  { name: 'Olcum Cihazi', stock: 9 },
+];
+
 export default function AssetTracker() {
   const { activeUser } = useUser();
-  const { employees, setEmployees } = useApp(); // Normally we should modify employees via specific context method, but this is mock.
+  const { employees } = useApp();
   const { addNotification } = useNotifications();
 
   // Modals state
@@ -56,7 +63,7 @@ export default function AssetTracker() {
             <p className="text-slate-400 dark:text-slate-500 text-sm mt-1">Şirket envanteri ve zimmetli materyallerin listesi.</p>
           </motion.div>
           
-          {(activeUser?.role === 'ik_muduru' || activeUser?.role === 'admin') && (
+          {(activeUser?.role === 'ik_muduru' || activeUser?.role === 'admin' || activeUser?.isSuperAdmin) && (
             <button 
               onClick={() => setShowAddModal(true)}
               className="flex items-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-600 text-white font-bold rounded-xl shadow-lg shadow-primary/30 transition-all active:scale-95 text-sm"
@@ -67,14 +74,14 @@ export default function AssetTracker() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-           {['Laptop', 'Telefon', 'Koruyucu Gözlük', 'Ölçüm Cihazı'].map((item, i) => (
-             <div key={i} className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm flex items-center gap-4">
+           {STOCK_ITEMS.map((item) => (
+             <div key={item.name} className="bg-white dark:bg-slate-800 rounded-2xl p-5 border border-slate-100 dark:border-slate-700 shadow-sm flex items-center gap-4">
                 <div className="w-12 h-12 bg-slate-100 dark:bg-slate-700 rounded-full flex items-center justify-center">
                   <Package className="w-6 h-6 text-slate-400" />
                 </div>
                 <div>
-                   <p className="text-sm font-bold text-slate-800 dark:text-slate-100">{item}</p>
-                   <p className="text-xs text-slate-500">Stokta: {Math.floor(Math.random() * 20)+5} Adet</p>
+                   <p className="text-sm font-bold text-slate-800 dark:text-slate-100">{item.name}</p>
+                   <p className="text-xs text-slate-500">Stokta: {item.stock} Adet</p>
                 </div>
              </div>
            ))}
